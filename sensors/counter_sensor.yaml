@@ -1,0 +1,75 @@
+# Counter Sensor
+# Emits incrementing counter events, storing state in the Attune keystore
+#
+# Each subscribing rule gets its own independent counter, keyed by rule ref.
+# The sensor listens for rule lifecycle events via RabbitMQ and manages
+# per-rule timer loops that emit one event per second (configurable).
+
+ref: nodejs_example.counter_sensor
+label: "Counter Sensor"
+description: "Emits periodic counter events with per-rule state stored in the Attune keystore"
+enabled: true
+
+# Sensor runner type
+runner_type: nodejs
+
+# Entry point for sensor execution
+entry_point: counter_sensor.js
+
+# Trigger types this sensor monitors
+trigger_types:
+  - nodejs_example.counter
+
+# Sensor configuration schema
+parameters:
+  type: object
+  properties:
+    default_interval_seconds:
+      type: integer
+      description: "Default interval between counter emissions (in seconds)"
+      default: 1
+      minimum: 1
+      maximum: 3600
+    key_prefix:
+      type: string
+      description: "Prefix for counter keys in the Attune keystore"
+      default: "nodejs_example.counter"
+
+# Poll interval (how often the sensor checks for events)
+poll_interval: 1
+
+# Tags for categorization
+tags:
+  - counter
+  - nodejs
+  - example
+  - keystore
+
+# Metadata
+meta:
+  builtin: false
+  system: false
+  description: |
+    The counter sensor demonstrates a stateful Node.js sensor that integrates
+    with the Attune keystore. It maintains a separate monotonically-increasing
+    counter for each subscribing rule, persisting the value in the keystore
+    so that counters survive sensor restarts.
+
+    Features exercised:
+    - Node.js sensor lifecycle (startup, rule subscription, shutdown)
+    - RabbitMQ integration (amqplib) for rule lifecycle events
+    - Attune keystore API for persistent state (GET/PUT/POST /api/v1/keys)
+    - Per-rule scoped state via keystore key naming
+    - Periodic event emission via POST /events API
+    - Graceful shutdown with timer cleanup
+
+# Documentation
+examples:
+  - description: "Counter firing every second (default)"
+    trigger_type: nodejs_example.counter
+    trigger_config: {}
+
+  - description: "Counter firing every 5 seconds"
+    trigger_type: nodejs_example.counter
+    trigger_config:
+      interval_seconds: 5

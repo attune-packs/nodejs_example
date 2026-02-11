@@ -1,0 +1,25 @@
+# Count and Log Rule
+# Connects the counter sensor trigger to the read_counter action
+#
+# When the counter sensor fires, this rule passes the counter value
+# and rule reference from the trigger payload into the read_counter action.
+
+ref: nodejs_example.count_and_log
+pack_ref: nodejs_example
+label: "Count and Log"
+description: "Fires on each counter tick and logs the current counter value"
+
+# Link trigger to action
+trigger_ref: nodejs_example.counter
+action_ref: nodejs_example.read_counter
+
+# Map trigger payload fields into action parameters
+action_params:
+  counter: "{{ trigger.payload.counter }}"
+  rule_ref: "{{ trigger.payload.rule_ref }}"
+
+# No conditions — fire on every counter event
+conditions: {}
+
+# Active by default
+enabled: true

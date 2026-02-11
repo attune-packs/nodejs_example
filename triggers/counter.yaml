@@ -1,0 +1,59 @@
+# Counter Trigger
+# Fires periodically with an incrementing counter value
+
+ref: nodejs_example.counter
+label: "Counter Trigger"
+description: "Fires at regular intervals with an incrementing counter value scoped per rule"
+enabled: true
+
+# Trigger type
+type: custom
+
+# Parameter schema - configuration for the trigger instance
+parameters:
+  type: object
+  properties:
+    interval_seconds:
+      type: integer
+      description: "Seconds between each counter emission"
+      default: 1
+      minimum: 1
+      maximum: 3600
+  required: []
+
+# Payload schema - data emitted when trigger fires
+output:
+  type: object
+  properties:
+    counter:
+      type: integer
+      description: "Current counter value (monotonically increasing per rule)"
+    rule_ref:
+      type: string
+      description: "Reference of the rule that this counter is scoped to"
+    sensor_ref:
+      type: string
+      description: "Reference to the sensor that generated this event"
+    fired_at:
+      type: string
+      format: date-time
+      description: "Timestamp when the trigger fired"
+  required:
+    - counter
+    - rule_ref
+    - fired_at
+
+# Tags for categorization
+tags:
+  - counter
+  - example
+  - nodejs
+
+# Documentation
+examples:
+  - description: "Counter firing every second (default)"
+    parameters: {}
+
+  - description: "Counter firing every 5 seconds"
+    parameters:
+      interval_seconds: 5

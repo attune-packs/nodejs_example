@@ -1,0 +1,10 @@
+{
+  "name": "attune-pack-nodejs-example",
+  "version": "1.0.0",
+  "description": "Example Attune pack demonstrating Node.js actions, a counter sensor with keystore integration, and HTTP requests",
+  "private": true,
+  "dependencies": {
+    "node-fetch": "^2.7.0",
+    "amqplib": "^0.10.4"
+  }
+}

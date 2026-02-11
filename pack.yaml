@@ -1,0 +1,55 @@
+# Node.js Example Pack
+# Demonstrates Node.js actions, sensors, triggers, and keystore integration
+
+ref: nodejs_example
+label: "Node.js Example Pack"
+description: "Example pack demonstrating Node.js actions, a counter sensor with keystore integration, and HTTP requests"
+version: "1.0.0"
+author: "Attune Team"
+email: "support@attune.io"
+
+system: false
+enabled: true
+
+# Pack configuration schema
+conf_schema:
+  type: object
+  properties:
+    counter_key_prefix:
+      type: string
+      description: "Prefix for counter keys in the keystore"
+      default: "nodejs_example.counter"
+
+# Default pack configuration
+config:
+  counter_key_prefix: "nodejs_example.counter"
+
+# Pack metadata
+meta:
+  category: "examples"
+  keywords:
+    - "nodejs"
+    - "javascript"
+    - "examples"
+    - "counter"
+    - "sensor"
+    - "keystore"
+    - "http"
+  node_dependencies:
+    - "node-fetch@^3.3.0"
+    - "amqplib@^0.10.0"
+  documentation_url: "https://github.com/attune-automation/pack-nodejs-example"
+  repository_url: "https://github.com/attune-automation/pack-nodejs-example"
+
+# Tags for categorization
+tags:
+  - nodejs
+  - javascript
+  - examples
+  - counter
+  - sensor
+  - http
+
+# Runtime dependencies
+runtime_deps:
+  - nodejs

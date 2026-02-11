@@ -1,0 +1,45 @@
+# Hello Action
+# Simple Node.js action that returns "Hello, Node.js"
+
+ref: nodejs_example.hello
+label: "Hello Node.js"
+description: "A simple Node.js action that returns a greeting message"
+enabled: true
+
+# Runner type determines how the action is executed
+runner_type: nodejs
+
+# Entry point is the JavaScript file to execute
+entry_point: hello.js
+
+# Parameter delivery: stdin for secure parameter passing
+parameter_delivery: stdin
+parameter_format: json
+
+# Output format: json (structured data parsing enabled)
+output_format: json
+
+# Action parameters schema (standard JSON Schema format)
+parameters:
+  type: object
+  properties:
+    name:
+      type: string
+      description: "Optional name to include in greeting"
+      default: "Node.js"
+
+# Output schema
+output_schema:
+  type: object
+  properties:
+    message:
+      type: string
+      description: "The greeting message"
+  required:
+    - message
+
+# Tags for categorization
+tags:
+  - nodejs
+  - example
+  - greeting

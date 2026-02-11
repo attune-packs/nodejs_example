@@ -1,0 +1,58 @@
+# Read Counter Action
+# Consumes a counter value and returns a formatted message
+
+ref: nodejs_example.read_counter
+label: "Read Counter"
+description: "Receives a counter value (typically from the counter trigger) and returns a formatted message containing it"
+enabled: true
+
+# Runner type
+runner_type: nodejs
+
+# Entry point
+entry_point: read_counter.js
+
+# Parameter delivery: stdin for secure parameter passing
+parameter_delivery: stdin
+parameter_format: json
+
+# Output format: json (structured data)
+output_format: json
+
+# Action parameters schema
+parameters:
+  type: object
+  properties:
+    counter:
+      type: integer
+      description: "The counter value to consume"
+    rule_ref:
+      type: string
+      description: "The rule reference the counter is scoped to"
+      default: ""
+  required:
+    - counter
+
+# Output schema
+output_schema:
+  type: object
+  properties:
+    message:
+      type: string
+      description: "Formatted message containing the counter value"
+    counter:
+      type: integer
+      description: "The counter value that was consumed"
+    rule_ref:
+      type: string
+      description: "The rule reference the counter is scoped to"
+  required:
+    - message
+    - counter
+
+# Tags for categorization
+tags:
+  - counter
+  - example
+  - nodejs
+  - consumer
