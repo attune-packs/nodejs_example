@@ -5,26 +5,42 @@
  * Consumes a counter value (typically from the counter sensor trigger payload)
  * and returns a formatted message containing the counter value.
  *
- * Parameters are delivered via stdin as JSON from the Node.js wrapper.
+ * Parameters are delivered via stdin as JSON.
  */
 
 "use strict";
 
-/**
- * @param {object} params
- * @param {number} params.counter - The counter value from the trigger payload.
- * @param {string} params.rule_ref - The rule reference the counter is scoped to.
- * @returns {object} Formatted message and raw counter value.
- */
-function run(params) {
-  const counter = params.counter !== undefined ? params.counter : 0;
-  const ruleRef = params.rule_ref || "unknown";
+function main() {
+  let data = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("readable", () => {
+    let chunk;
+    while ((chunk = process.stdin.read()) !== null) {
+      data += chunk;
+    }
+  });
+  process.stdin.on("end", () => {
+    // Parse the first line as JSON parameters
+    const firstLine = data.split("\n")[0].trim();
+    let params = {};
+    if (firstLine) {
+      try {
+        params = JSON.parse(firstLine);
+      } catch {
+        // ignore parse errors, use empty params
+      }
+    }
 
-  return {
-    message: `Counter value is ${counter} (from rule: ${ruleRef})`,
-    counter: counter,
-    rule_ref: ruleRef,
-  };
+    const counter = params.counter !== undefined ? params.counter : 0;
+    const ruleRef = params.rule_ref || "unknown";
+
+    const result = {
+      message: `Counter value is ${counter} (from rule: ${ruleRef})`,
+      counter: counter,
+      rule_ref: ruleRef,
+    };
+    process.stdout.write(JSON.stringify(result) + "\n");
+  });
 }
 
-module.exports = { run };
+main();

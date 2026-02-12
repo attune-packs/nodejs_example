@@ -3,28 +3,38 @@
  * Hello Action - Node.js Example Pack
  *
  * A minimal Node.js action that returns "Hello, Node.js".
- * Demonstrates the basic structure of a Node.js action in Attune.
+ * Demonstrates the basic structure of a self-contained action in Attune.
  *
- * When invoked via the Node.js wrapper, the `run` export is called
- * with the action parameters as its argument.
+ * Actions receive parameters as JSON on stdin and write results to stdout.
  */
 
 "use strict";
 
-/**
- * Return a simple greeting message.
- * @param {object} params - Action parameters (unused).
- * @returns {{ message: string }}
- */
-function run(params) {
-  return { message: "Hello, Node.js" };
+function main() {
+  let data = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("readable", () => {
+    let chunk;
+    while ((chunk = process.stdin.read()) !== null) {
+      data += chunk;
+    }
+  });
+  process.stdin.on("end", () => {
+    // Parse the first line as JSON parameters
+    const firstLine = data.split("\n")[0].trim();
+    let params = {};
+    if (firstLine) {
+      try {
+        params = JSON.parse(firstLine);
+      } catch {
+        // ignore parse errors, use empty params
+      }
+    }
+
+    const name = params.name || "Node.js";
+    const result = { message: `Hello, ${name}` };
+    process.stdout.write(JSON.stringify(result) + "\n");
+  });
 }
 
-// Direct execution support (without the wrapper)
-if (require.main === module) {
-  const result = run({});
-  process.stdout.write(JSON.stringify({ result, status: "success" }) + "\n");
-  process.exit(0);
-}
-
-module.exports = { run };
+main();

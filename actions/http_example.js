@@ -2,25 +2,79 @@
 /**
  * HTTP Example Action - Node.js Example Pack
  *
- * Demonstrates using the `node-fetch` library to make an HTTP call to example.com.
- * Receives parameters via the Node.js wrapper (stdin JSON with code_path).
+ * Demonstrates using the built-in https/http modules to make an HTTP call.
+ * Receives parameters via stdin as JSON.
  */
 
-const fetch = require("node-fetch");
+"use strict";
 
-async function run(params) {
-  const url = params.url || "https://example.com";
+const https = require("https");
+const http = require("http");
+const { URL } = require("url");
 
-  const response = await fetch(url, { timeout: 10000 });
-  const text = await response.text();
+function fetchUrl(url, timeout) {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const mod = parsed.protocol === "https:" ? https : http;
 
-  return {
-    status_code: response.status,
-    url: response.url,
-    content_length: text.length,
-    snippet: text.slice(0, 500),
-    success: response.ok,
-  };
+    const req = mod.get(url, { timeout }, (res) => {
+      let body = "";
+      res.on("data", (chunk) => {
+        body += chunk;
+      });
+      res.on("end", () => {
+        resolve({
+          status_code: res.statusCode,
+          url: url,
+          content_length: body.length,
+          snippet: body.slice(0, 500),
+          success: res.statusCode >= 200 && res.statusCode < 400,
+        });
+      });
+    });
+
+    req.on("error", (err) => reject(err));
+    req.on("timeout", () => {
+      req.destroy();
+      reject(new Error("Request timed out"));
+    });
+  });
 }
 
-module.exports = { run };
+function main() {
+  let data = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("readable", () => {
+    let chunk;
+    while ((chunk = process.stdin.read()) !== null) {
+      data += chunk;
+    }
+  });
+  process.stdin.on("end", async () => {
+    // Parse the first line as JSON parameters
+    const firstLine = data.split("\n")[0].trim();
+    let params = {};
+    if (firstLine) {
+      try {
+        params = JSON.parse(firstLine);
+      } catch {
+        // ignore parse errors, use empty params
+      }
+    }
+
+    const url = params.url || "https://example.com";
+    const timeout = (params.timeout || 10) * 1000;
+
+    try {
+      const result = await fetchUrl(url, timeout);
+      process.stdout.write(JSON.stringify(result) + "\n");
+    } catch (err) {
+      process.stderr.write(
+        JSON.stringify({ error: err.message || String(err) }) + "\n",
+      );
+      process.exit(1);
+    }
+  });
+}
+
+main();
