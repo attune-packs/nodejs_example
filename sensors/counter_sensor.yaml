@@ -20,20 +20,18 @@ entry_point: counter_sensor.js
 trigger_types:
   - nodejs_example.counter
 
-# Sensor configuration schema
+# Sensor configuration schema (flat format with inline required/secret)
 parameters:
-  type: object
-  properties:
-    default_interval_seconds:
-      type: integer
-      description: "Default interval between counter emissions (in seconds)"
-      default: 1
-      minimum: 1
-      maximum: 3600
-    key_prefix:
-      type: string
-      description: "Prefix for counter keys in the Attune keystore"
-      default: "nodejs_example.counter"
+  default_interval_seconds:
+    type: integer
+    description: "Default interval between counter emissions (in seconds)"
+    default: 1
+    minimum: 1
+    maximum: 3600
+  key_prefix:
+    type: string
+    description: "Prefix for counter keys in the Attune keystore"
+    default: "nodejs_example.counter"
 
 # Poll interval (how often the sensor checks for events)
 poll_interval: 1

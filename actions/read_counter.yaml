@@ -19,36 +19,30 @@ parameter_format: json
 # Output format: json (structured data)
 output_format: json
 
-# Action parameters schema
+# Action parameters schema (StackStorm-style: inline required per parameter)
 parameters:
-  type: object
-  properties:
-    counter:
-      type: integer
-      description: "The counter value to consume"
-    rule_ref:
-      type: string
-      description: "The rule reference the counter is scoped to"
-      default: ""
-  required:
-    - counter
+  counter:
+    type: integer
+    description: "The counter value to consume"
+    required: true
+  rule_ref:
+    type: string
+    description: "The rule reference the counter is scoped to"
+    default: ""
 
-# Output schema
+# Output schema (StackStorm-style: inline required per parameter)
 output_schema:
-  type: object
-  properties:
-    message:
-      type: string
-      description: "Formatted message containing the counter value"
-    counter:
-      type: integer
-      description: "The counter value that was consumed"
-    rule_ref:
-      type: string
-      description: "The rule reference the counter is scoped to"
-  required:
-    - message
-    - counter
+  message:
+    type: string
+    description: "Formatted message containing the counter value"
+    required: true
+  counter:
+    type: integer
+    description: "The counter value that was consumed"
+    required: true
+  rule_ref:
+    type: string
+    description: "The rule reference the counter is scoped to"
 
 # Tags for categorization
 tags:

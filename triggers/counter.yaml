@@ -9,39 +9,32 @@ enabled: true
 # Trigger type
 type: custom
 
-# Parameter schema - configuration for the trigger instance
+# Parameter schema - configuration for the trigger instance (flat format with inline required/secret)
 parameters:
-  type: object
-  properties:
-    interval_seconds:
-      type: integer
-      description: "Seconds between each counter emission"
-      default: 1
-      minimum: 1
-      maximum: 3600
-  required: []
+  interval_seconds:
+    type: integer
+    description: "Seconds between each counter emission"
+    default: 1
+    minimum: 1
+    maximum: 3600
 
-# Payload schema - data emitted when trigger fires
+# Payload schema - data emitted when trigger fires (flat format with inline required/secret)
 output:
-  type: object
-  properties:
-    counter:
-      type: integer
-      description: "Current counter value (monotonically increasing per rule)"
-    rule_ref:
-      type: string
-      description: "Reference of the rule that this counter is scoped to"
-    sensor_ref:
-      type: string
-      description: "Reference to the sensor that generated this event"
-    fired_at:
-      type: string
-      format: date-time
-      description: "Timestamp when the trigger fired"
-  required:
-    - counter
-    - rule_ref
-    - fired_at
+  counter:
+    type: integer
+    description: "Current counter value (monotonically increasing per rule)"
+    required: true
+  rule_ref:
+    type: string
+    description: "Reference of the rule that this counter is scoped to"
+    required: true
+  sensor_ref:
+    type: string
+    description: "Reference to the sensor that generated this event"
+  fired_at:
+    type: string
+    description: "Timestamp when the trigger fired"
+    required: true
 
 # Tags for categorization
 tags:

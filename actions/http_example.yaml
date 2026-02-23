@@ -19,43 +19,42 @@ parameter_format: json
 # Output format: json (structured data)
 output_format: json
 
-# Action parameters schema
+# Action parameters schema (flat format with inline required/secret)
 parameters:
-  type: object
-  properties:
-    url:
-      type: string
-      description: "URL to request (defaults to https://example.com)"
-      default: "https://example.com"
-    method:
-      type: string
-      description: "HTTP method"
-      default: "GET"
-      enum:
-        - GET
-        - POST
-        - PUT
-        - DELETE
+  url:
+    type: string
+    description: "URL to request (defaults to https://example.com)"
+    default: "https://example.com"
+  method:
+    type: string
+    description: "HTTP method"
+    default: "GET"
+    enum:
+      - GET
+      - POST
+      - PUT
+      - DELETE
 
-# Output schema
+# Output schema (flat format with inline required/secret)
 output_schema:
-  type: object
-  properties:
-    status_code:
-      type: integer
-      description: "HTTP response status code"
-    url:
-      type: string
-      description: "URL that was requested"
-    content_length:
-      type: integer
-      description: "Length of the response body in characters"
-    snippet:
-      type: string
-      description: "First 500 characters of the response body"
-    success:
-      type: boolean
-      description: "Whether the request succeeded (2xx status)"
+  status_code:
+    type: integer
+    description: "HTTP response status code"
+    required: true
+  url:
+    type: string
+    description: "URL that was requested"
+    required: true
+  content_length:
+    type: integer
+    description: "Length of the response body in characters"
+  snippet:
+    type: string
+    description: "First 500 characters of the response body"
+  success:
+    type: boolean
+    description: "Whether the request succeeded (2xx status)"
+    required: true
 
 # Tags for categorization
 tags:
