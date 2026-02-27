@@ -9,6 +9,9 @@ enabled: true
 # Runner type determines how the action is executed
 runner_type: nodejs
 
+# Runtime version constraint (semver range) - selects compatible Node.js version
+runtime_version: ">=18"
+
 # Entry point is the JavaScript file to execute
 entry_point: hello.js
 

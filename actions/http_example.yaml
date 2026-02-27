@@ -9,6 +9,9 @@ enabled: true
 # Runner type
 runner_type: nodejs
 
+# Runtime version constraint (semver range)
+runtime_version: ">=18"
+
 # Entry point
 entry_point: http_example.js
 

@@ -13,6 +13,9 @@ enabled: true
 # Sensor runner type
 runner_type: nodejs
 
+# Minimum Node.js version required (semver constraint)
+runtime_version: ">=18"
+
 # Entry point for sensor execution
 entry_point: counter_sensor.js
 
