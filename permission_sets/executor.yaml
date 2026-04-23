@@ -1,0 +1,33 @@
+# Node.js Example Pack — Executor
+# Execute any action in the nodejs_example pack and monitor results.
+# Mirrors core.executor but constrains grants to this pack's resources.
+# Cannot modify actions, rules, or keys — use nodejs_example.editor for that.
+
+ref: nodejs_example.executor
+label: "Node.js Example - Executor"
+description: "Execute any action in the Node.js Example pack and view the resulting executions and artifacts."
+
+grants:
+  # The pack itself — read only
+  - resource: packs
+    actions: [read]
+    constraints:
+      refs: [nodejs_example]
+
+  # All actions in this pack — read metadata and execute
+  - resource: actions
+    actions: [read, execute]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Executions produced by this pack's actions
+  - resource: executions
+    actions: [read]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Artifacts produced by this pack's actions — read only
+  - resource: artifacts
+    actions: [read]
+    constraints:
+      owner_types: [pack]

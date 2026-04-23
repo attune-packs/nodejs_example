@@ -1,0 +1,39 @@
+# Node.js Example Pack — Viewer
+# Read-only access to the nodejs_example pack.
+# Mirrors core.viewer but constrains grants to this pack's resources.
+
+ref: nodejs_example.viewer
+label: "Node.js Example - Viewer"
+description: "Read-only access to the Node.js Example pack's actions, execution history, and artifacts."
+
+grants:
+  # The pack itself — read only
+  - resource: packs
+    actions: [read]
+    constraints:
+      refs: [nodejs_example]
+
+  # All actions in this pack — read metadata only, no execution
+  - resource: actions
+    actions: [read]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Executions produced by this pack's actions
+  - resource: executions
+    actions: [read]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Artifacts produced by this pack's actions — read only
+  - resource: artifacts
+    actions: [read]
+    constraints:
+      owner_types: [pack]
+
+  # Keys owned by this pack — can see they exist and read plaintext values,
+  # but encrypted key values are not revealed (no decrypt grant)
+  - resource: keys
+    actions: [read]
+    constraints:
+      owner_types: [pack]

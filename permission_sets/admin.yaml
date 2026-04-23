@@ -1,0 +1,61 @@
+# Node.js Example Pack — Admin
+# Full administrative access scoped to the nodejs_example pack.
+# Mirrors core.admin but constrains every grant to this pack's resources.
+
+ref: nodejs_example.admin
+label: "Node.js Example - Admin"
+description: "Full administrative access to the Node.js Example pack, including all actions, rules, executions, keys, and artifacts."
+
+grants:
+  # The pack itself — read metadata and update configuration
+  - resource: packs
+    actions: [read, update]
+    constraints:
+      refs: [nodejs_example]
+
+  # All actions in this pack
+  - resource: actions
+    actions: [read, create, update, delete, execute]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Rules that trigger actions in this pack
+  - resource: rules
+    actions: [read, create, update, delete]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Triggers are shared infrastructure — read access only
+  - resource: triggers
+    actions: [read]
+
+  # Executions produced by this pack's actions
+  - resource: executions
+    actions: [read, update, cancel]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Events and enforcements are audit trail — read only
+  - resource: events
+    actions: [read]
+
+  - resource: enforcements
+    actions: [read]
+
+  # Inquiries raised by this pack's actions
+  - resource: inquiries
+    actions: [read, respond]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Keys owned by this pack — full access including decryption
+  - resource: keys
+    actions: [read, create, update, delete, decrypt]
+    constraints:
+      owner_types: [pack]
+
+  # Artifacts produced by this pack's actions
+  - resource: artifacts
+    actions: [read, create, update, delete]
+    constraints:
+      owner_types: [pack]

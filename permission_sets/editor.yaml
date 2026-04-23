@@ -1,0 +1,62 @@
+# Node.js Example Pack — Editor
+# Create, update, and execute actions within the nodejs_example pack.
+# Mirrors core.editor but constrains grants to this pack's resources.
+# Cannot delete actions/rules or manage keys — use nodejs_example.admin for that.
+
+ref: nodejs_example.editor
+label: "Node.js Example - Editor"
+description: "Create, update, and execute actions within the Node.js Example pack. Includes read access to pack-owned keys and artifacts."
+
+grants:
+  # The pack itself — read only
+  - resource: packs
+    actions: [read]
+    constraints:
+      refs: [nodejs_example]
+
+  # All actions in this pack — can read and execute but not delete
+  - resource: actions
+    actions: [read, create, update, execute]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Rules that trigger actions in this pack — can manage but not delete
+  - resource: rules
+    actions: [read, create, update]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Triggers are shared infrastructure — read access only
+  - resource: triggers
+    actions: [read]
+
+  # Executions produced by this pack's actions — can cancel own executions
+  - resource: executions
+    actions: [read, cancel]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Events and enforcements are audit trail — read only
+  - resource: events
+    actions: [read]
+
+  - resource: enforcements
+    actions: [read]
+
+  # Inquiries raised by this pack's actions
+  - resource: inquiries
+    actions: [read, respond]
+    constraints:
+      pack_refs: [nodejs_example]
+
+  # Keys owned by this pack — can read and decrypt, but not create/delete
+  - resource: keys
+    actions: [read, decrypt]
+    constraints:
+      owner_types: [pack]
+
+  # Artifacts produced by this pack's actions — can create but not delete
+  - resource: artifacts
+    actions: [read, create]
+    constraints:
+      owner_types: [pack]
