@@ -31,11 +31,6 @@ parameters:
     default: 1
     minimum: 1
     maximum: 3600
-  key_prefix:
-    type: string
-    description: "Prefix for counter keys in the Attune keystore"
-    default: "nodejs_example.counter"
-
 # Poll interval (how often the sensor checks for events)
 poll_interval: 1
 

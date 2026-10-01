@@ -22,6 +22,9 @@ parameter_format: json
 # Output format: json (structured data)
 output_format: json
 
+log_retention_policy: versions
+log_retention_limit: 5
+
 # Action parameters schema (StackStorm-style: inline required per parameter)
 parameters:
   counter:

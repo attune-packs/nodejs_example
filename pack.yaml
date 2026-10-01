@@ -11,17 +11,6 @@ email: "support@attune.io"
 system: false
 enabled: true
 
-# Pack configuration schema (flat format with inline required/secret)
-conf_schema:
-  counter_key_prefix:
-    type: string
-    description: "Prefix for counter keys in the keystore"
-    default: "nodejs_example.counter"
-
-# Default pack configuration
-config:
-  counter_key_prefix: "nodejs_example.counter"
-
 # Pack metadata
 meta:
   category: "examples"

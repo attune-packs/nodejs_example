@@ -108,9 +108,9 @@ These are installed automatically when the pack is loaded by a Node.js worker wi
 │     ┌────────────────────────────────────────┐           │
 │     │  Timer (1 tick/sec per rule)            │           │
 │     │                                        │           │
-│     │  GET /api/v1/keys/{key} → read counter │           │
+│     │  GET /api/v1/keys/{ref} → read counter │           │
 │     │  counter += 1                          │           │
-│     │  PUT /api/v1/keys/{key} → write back   │           │
+│     │  PUT /api/v1/keys/{ref} → write back   │           │
 │     │  POST /api/v1/events → emit event      │           │
 │     └────────────────────────────────────────┘           │
 │                                                          │
@@ -120,16 +120,17 @@ These are installed automatically when the pack is loaded by a Node.js worker wi
 
 ### Keystore Key Naming
 
-Each rule gets its own counter key:
+Each rule gets its own sensor-owned counter Key. The create request uses this
+local ref:
 
 ```
-nodejs_example.counter.<rule_ref_with_dots_replaced_by_underscores>
+counter_<24-character-rule-ref-hash>
 ```
 
 For example, a rule with ref `nodejs_example.count_and_log` stores its counter at:
 
 ```
-nodejs_example.counter.nodejs_example_count_and_log
+sensor.nodejs_example.counter_sensor.counter_0123456789abcdef01234567
 ```
 
 ### Event Payload
@@ -206,14 +207,12 @@ The pack supports the following configuration in `pack.yaml`:
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `counter_key_prefix` | `nodejs_example.counter` | Prefix for keystore keys |
 
 The sensor supports these parameters:
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | `default_interval_seconds` | `1` | Default tick interval per rule |
-| `key_prefix` | `nodejs_example.counter` | Keystore key prefix |
 
 The trigger supports per-rule configuration:
 

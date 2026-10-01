@@ -23,6 +23,7 @@
 
 const http = require("http");
 const https = require("https");
+const crypto = require("crypto");
 const url = require("url");
 const amqplib = require("amqplib");
 
@@ -40,7 +41,6 @@ const MQ_EXCHANGE = process.env.ATTUNE_MQ_EXCHANGE || "attune";
 const LOG_LEVEL = (process.env.ATTUNE_LOG_LEVEL || "info").toLowerCase();
 
 const TRIGGER_TYPE = "nodejs_example.counter";
-const KEY_PREFIX = "nodejs_example.counter";
 const DEFAULT_INTERVAL = 1; // seconds
 
 const LOG_LEVELS = { debug: 0, info: 1, warn: 2, error: 3 };
@@ -185,10 +185,10 @@ async function keystorePut(keyRef, value) {
   }
 }
 
-async function keystoreCreate(keyRef, value) {
+async function keystoreCreate(localRef, keyRef, value) {
   try {
     const res = await httpRequest("POST", API_URL + "/api/v1/keys", {
-      ref: keyRef,
+      local_ref: localRef,
       owner_type: "sensor",
       owner_sensor_ref: SENSOR_REF,
       name: "Counter: " + keyRef,
@@ -274,7 +274,9 @@ class RuleCounter {
     this.ruleId = ruleId;
     this.ruleRef = ruleRef;
     this.interval = (triggerParams && triggerParams.interval_seconds) || DEFAULT_INTERVAL;
-    this.keyRef = KEY_PREFIX + "." + ruleRef.replace(/\./g, "_");
+    const ruleDigest = crypto.createHash("sha256").update(ruleRef).digest("hex").slice(0, 24);
+    this.localKeyRef = "counter_" + ruleDigest;
+    this.keyRef = "sensor." + SENSOR_REF + "." + this.localKeyRef;
     this._timer = null;
     this._stopped = false;
     this._ticking = false;
@@ -341,7 +343,7 @@ class RuleCounter {
 
     // Write back to keystore
     if (raw === null) {
-      await keystoreCreate(this.keyRef, counter);
+      await keystoreCreate(this.localKeyRef, this.keyRef, counter);
     } else {
       await keystorePut(this.keyRef, counter);
     }
