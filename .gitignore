@@ -21,6 +21,8 @@ build/
 Thumbs.db
 
 # Test artifacts
+__pycache__/
+*.py[cod]
 coverage/
 .nyc_output/
 

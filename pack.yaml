@@ -4,7 +4,8 @@
 ref: nodejs_example
 label: "Node.js Example Pack"
 description: "Example pack demonstrating Node.js actions, a counter sensor with keystore integration, and HTTP requests"
-version: "1.0.0"
+version: "1.0.1"
+license: MIT
 author: "Attune Team"
 email: "support@attune.io"
 
@@ -40,3 +41,17 @@ tags:
 # Runtime dependencies
 runtime_deps:
   - nodejs
+
+testing:
+  enabled: true
+  discovery:
+    method: directory
+    path: tests
+  runners:
+    release:
+      type: unittest
+      entry_point: tests/test_release.py
+      timeout: 60
+      result_format: simple
+  min_pass_rate: 1.0
+  on_failure: block
